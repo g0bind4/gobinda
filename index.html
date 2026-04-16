@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gobinda — Security Researcher</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ✅ EmailJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  // ✅ Yahan apna PUBLIC KEY daalo (EmailJS → Account → API Keys)
+  emailjs.init("YOUR_PUBLIC_KEY");
+</script>
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -46,8 +53,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5%;height:64px;dis
 
 .gridbg{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;opacity:.45}
 .glow-orb{position:absolute;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,135,0.05) 0%,transparent 70%);right:-150px;top:50%;transform:translateY(-50%);pointer-events:none}
-
-
 
 .hero-name{font-family:var(--sans);font-size:clamp(4rem,9vw,8rem);font-weight:800;line-height:.92;letter-spacing:-.03em;color:#fff;margin-bottom:1.6rem}
 .hero-name .ac{color:var(--g);position:relative;display:inline-block}
@@ -146,7 +151,9 @@ section{padding:7rem 5%}
 .ftextarea{resize:vertical;min-height:130px}
 .fsub{background:var(--g);color:#060a07;border:none;font-family:var(--mono);font-size:.7rem;letter-spacing:.15em;padding:1rem 2rem;cursor:none;font-weight:700;align-self:flex-start;transition:all .2s}
 .fsub:hover{background:#fff}
+.fsub:disabled{opacity:.6;cursor:not-allowed}
 #fmsg{font-family:var(--mono);font-size:.68rem;color:var(--g);display:none;margin-top:.3rem}
+#ferr{font-family:var(--mono);font-size:.68rem;color:#ff4d4d;display:none;margin-top:.3rem}
 
 footer{padding:1.8rem 5%;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.63rem;color:var(--muted)}
 .gr{color:var(--g)}
@@ -370,11 +377,11 @@ footer{padding:1.8rem 5%;border-top:1px solid var(--border);display:flex;justify
   <h2 class="s-title reveal">Achievements</h2>
   <div class="ach-grid">
     <div class="ach-card feat reveal">
-  <span class="ach-icon">🛡️</span>
-  <div class="ach-title">Security Research</div>
-  <p class="ach-desc">Actively learning web security concepts through platforms like PortSwigger Web Academy, practicing vulnerability identification in lab environments.</p>
-  <span class="ach-badge">LEARNING ✓</span>
-</div>
+      <span class="ach-icon">🛡️</span>
+      <div class="ach-title">Security Research</div>
+      <p class="ach-desc">Actively learning web security concepts through platforms like PortSwigger Web Academy, practicing vulnerability identification in lab environments.</p>
+      <span class="ach-badge">LEARNING ✓</span>
+    </div>
     <div class="ach-card reveal">
       <span class="ach-icon">🐛</span>
       <div class="ach-title">Bug Bounty Hunter</div>
@@ -413,20 +420,36 @@ footer{padding:1.8rem 5%;border-top:1px solid var(--border);display:flex;justify
           <span class="clink-ico">🏴</span>
           <div><span class="clink-lbl">HACKTHEBOX</span><span class="clink-val">hackthebox.com</span></div>
         </a>
-		   </a>
         <a href="https://x.com/0x_g0binda" class="clink">
           <span class="clink-ico">X</span>
-          <div><span class="clink-lbl">TWITER</span><span class="clink-val">x.com/0x_g0binda</span></div>
+          <div><span class="clink-lbl">TWITTER</span><span class="clink-val">x.com/0x_g0binda</span></div>
         </a>
       </div>
     </div>
+
+    <!-- ✅ CONTACT FORM — EmailJS connected -->
     <div class="reveal">
-      <form class="cform" onsubmit="handleForm(event)">
-        <div><label class="flabel">NAME</label><input class="finput" type="text" placeholder="Your name" required></div>
-        <div><label class="flabel">EMAIL</label><input class="finput" type="email" placeholder="you@domain.com" required></div>
-        <div><label class="flabel">MESSAGE</label><textarea class="ftextarea" placeholder="Describe your security needs..."></textarea></div>
-        <button type="submit" class="fsub">SEND MESSAGE</button>
-        <div id="fmsg">✓ Message sent successfully.</div>
+      <form class="cform" id="contact-form" onsubmit="handleForm(event)">
+        <div>
+          <label class="flabel">NAME</label>
+          <!-- ✅ name="from_name" add kiya -->
+          <input class="finput" type="text" name="from_name" placeholder="Your name" required>
+        </div>
+        <div>
+          <label class="flabel">EMAIL</label>
+          <!-- ✅ name="reply_to" add kiya -->
+          <input class="finput" type="email" name="reply_to" placeholder="you@domain.com" required>
+        </div>
+        <div>
+          <label class="flabel">MESSAGE</label>
+          <!-- ✅ name="message" add kiya -->
+          <textarea class="ftextarea" name="message" placeholder="Describe your security needs..."></textarea>
+        </div>
+        <button type="submit" class="fsub" id="submit-btn">SEND MESSAGE</button>
+        <!-- Success message -->
+        <div id="fmsg">✓ Message sent successfully! I'll get back to you soon.</div>
+        <!-- Error message -->
+        <div id="ferr">✗ Something went wrong. Please try again or email directly.</div>
       </form>
     </div>
   </div>
@@ -438,6 +461,7 @@ footer{padding:1.8rem 5%;border-top:1px solid var(--border);display:flex;justify
 </footer>
 
 <script>
+// Custom cursor
 const cur=document.getElementById('cur'),cur2=document.getElementById('cur2');
 let mx=0,my=0,cx=0,cy=0;
 document.addEventListener('mousemove',e=>{
@@ -454,6 +478,7 @@ document.querySelectorAll('a,button').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cur.style.width='20px';cur.style.height='20px';cur.style.background='transparent'});
 });
 
+// Typewriter
 const roles=['ETHICAL HACKER','OSINT ANALYST','BUG BOUNTY HUNTER','CTF PLAYER','WEB SECURITY'];
 let ri=0,ci=0,del=false;
 const tw=document.getElementById('tw');
@@ -465,53 +490,45 @@ function type(){
 }
 type();
 
+// Scroll reveal
 const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on')}),{threshold:.12});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-function handleForm(e){
+// ✅ EmailJS Form Handler
+function handleForm(e) {
   e.preventDefault();
-  const m=document.getElementById('fmsg');
-  m.style.display='block';
-  setTimeout(()=>m.style.display='none',4000);
+
+  const btn = document.getElementById('submit-btn');
+  const fmsg = document.getElementById('fmsg');
+  const ferr = document.getElementById('ferr');
+
+  // Reset messages
+  fmsg.style.display = 'none';
+  ferr.style.display = 'none';
+
+  // Loading state
+  btn.textContent = 'SENDING...';
+  btn.disabled = true;
+
+  // ✅ Yahan apna SERVICE_ID aur TEMPLATE_ID daalo
+  emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', '#contact-form')
+    .then(function() {
+      // Success!
+      fmsg.style.display = 'block';
+      btn.textContent = 'SEND MESSAGE';
+      btn.disabled = false;
+      document.getElementById('contact-form').reset();
+      // 5 second baad message hide karo
+      setTimeout(() => fmsg.style.display = 'none', 5000);
+    }, function(error) {
+      // Error!
+      ferr.style.display = 'block';
+      btn.textContent = 'SEND MESSAGE';
+      btn.disabled = false;
+      console.error('EmailJS Error:', error);
+      setTimeout(() => ferr.style.display = 'none', 5000);
+    });
 }
-</script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
 </script>
 </body>
 </html>
